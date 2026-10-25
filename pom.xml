@@ -61,6 +61,13 @@
             <version>1.5.16</version>
         </dependency>
 
+        <!-- FlatLaf: tema visual moderno para las pantallas Swing -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.5.4</version>
+        </dependency>
+
         <!-- JUnit 5: pruebas -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
