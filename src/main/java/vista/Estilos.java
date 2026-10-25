@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.UIManager;
 
 /**
@@ -55,6 +56,8 @@ public final class Estilos {
         boton.setBorderPainted(false);
         boton.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 0));
         boton.setBackground(AZUL);
+        // Deshabilitado (sin permiso): texto gris sobre el mismo azul, sin caja clara
+        boton.putClientProperty("FlatLaf.style", "disabledBackground: #1F2A44; disabledText: #6B7280");
         manito(boton);
     }
 
@@ -76,5 +79,36 @@ public final class Estilos {
         tabla.setFillsViewportHeight(true);
         tabla.getTableHeader().setReorderingAllowed(false);
         tabla.getTableHeader().setFont(tabla.getTableHeader().getFont().deriveFont(Font.BOLD));
+    }
+
+    /** Color de cada estado de una orden de servicio. */
+    public static Color colorEstado(String estado) {
+        if (estado == null) {
+            return GRIS;
+        }
+        return switch (estado) {
+            case "En espera" -> NARANJA;
+            case "En reparación" -> new Color(0x1565C0);
+            case "Finalizado" -> VERDE;
+            default -> GRIS;
+        };
+    }
+
+    /** Muestra la columna "Estado" de una tabla con un punto y el color del estado. */
+    public static void columnaEstado(JTable tabla, int columna) {
+        tabla.getColumnModel().getColumn(columna).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(JTable t, Object valor, boolean seleccionado,
+                    boolean foco, int fila, int col) {
+                super.getTableCellRendererComponent(t, valor, seleccionado, foco, fila, col);
+                String estado = valor == null ? "" : valor.toString();
+                setText("● " + ("Finalizado".equals(estado) ? "Listo para cobrar" : estado));
+                setFont(getFont().deriveFont(Font.BOLD));
+                if (!seleccionado) {
+                    setForeground(colorEstado(estado));
+                }
+                return this;
+            }
+        });
     }
 }

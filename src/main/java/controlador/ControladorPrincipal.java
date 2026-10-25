@@ -2,6 +2,8 @@ package controlador;
 
 import dao.ClienteDAOImpl;
 import dao.DashboardDAOImpl;
+import dao.OrdenServicioDAOImpl;
+import dao.ProductoDAOImpl;
 import dao.UsuarioDAOImpl;
 import dao.VehiculoDAOImpl;
 import java.util.EnumMap;
@@ -16,6 +18,8 @@ import util.Permisos;
 import vista.FrmLogin;
 import vista.FrmPrincipal;
 import vista.PnlClientes;
+import vista.PnlCola;
+import vista.PnlHistorial;
 import vista.PnlEnConstruccion;
 import vista.PnlInicio;
 
@@ -56,6 +60,18 @@ public class ControladorPrincipal {
         vista.agregarModulo(pnlClientes, Modulo.CLIENTES.name());
         ControladorClientes controladorClientes = new ControladorClientes(pnlClientes, new ClienteDAOImpl(), new VehiculoDAOImpl());
         alAbrir.put(Modulo.CLIENTES, controladorClientes::cargar);
+
+        PnlCola pnlCola = new PnlCola();
+        vista.agregarModulo(pnlCola, Modulo.COLA.name());
+        ControladorCola controladorCola = new ControladorCola(pnlCola, new OrdenServicioDAOImpl(),
+                new VehiculoDAOImpl(), new ClienteDAOImpl(), new UsuarioDAOImpl());
+        alAbrir.put(Modulo.COLA, controladorCola::cargar);
+
+        PnlHistorial pnlHistorial = new PnlHistorial();
+        vista.agregarModulo(pnlHistorial, Modulo.HISTORIAL.name());
+        ControladorHistorial controladorHistorial = new ControladorHistorial(pnlHistorial, new OrdenServicioDAOImpl(),
+                new ProductoDAOImpl(), new UsuarioDAOImpl(), new VehiculoDAOImpl(), usuario);
+        alAbrir.put(Modulo.HISTORIAL, controladorHistorial::cargar);
 
         for (Modulo modulo : Modulo.values()) {
             if (!alAbrir.containsKey(modulo)) {

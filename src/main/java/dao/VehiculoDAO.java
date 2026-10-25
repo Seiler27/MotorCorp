@@ -11,6 +11,9 @@ public interface VehiculoDAO {
     /** Lista las motos de un cliente. */
     List<Vehiculo> listarPorCliente(int idCliente);
 
+    /** Busca una moto por su placa. Devuelve null si no existe. */
+    Vehiculo buscarPorPlaca(String placa);
+
     /** Indica si ya existe otra moto con esa placa (se ignora la moto con idExcluir). */
     boolean existePlaca(String placa, int idExcluir);
 

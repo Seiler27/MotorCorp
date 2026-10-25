@@ -24,6 +24,8 @@ public class OrdenServicio {
     private String placa;
     private String nombreCliente;
     private String nombreMecanico;
+    private String telefonoCliente;
+    private String moto;              // marca y modelo, ej: "Honda CB 190R"
 
     public OrdenServicio() {
     }
@@ -104,6 +106,22 @@ public class OrdenServicio {
 
     public void setNombreMecanico(String nombreMecanico) {
         this.nombreMecanico = nombreMecanico;
+    }
+
+    public String getTelefonoCliente() {
+        return telefonoCliente;
+    }
+
+    public void setTelefonoCliente(String telefonoCliente) {
+        this.telefonoCliente = telefonoCliente;
+    }
+
+    public String getMoto() {
+        return moto;
+    }
+
+    public void setMoto(String moto) {
+        this.moto = moto;
     }
 
     @Override

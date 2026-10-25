@@ -50,6 +50,26 @@ public class ClienteDAOImpl implements ClienteDAO {
     }
 
     @Override
+    public Cliente buscarPorId(int idCliente) {
+        String sql = "SELECT id_cliente, dni, nombres, apellidos, telefono, correo FROM clientes WHERE id_cliente = ?";
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, idCliente);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Cliente c = new Cliente(rs.getString("dni"), rs.getString("nombres"), rs.getString("apellidos"),
+                            rs.getString("telefono"), rs.getString("correo"));
+                    c.setIdCliente(rs.getInt("id_cliente"));
+                    return c;
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Error al buscar el cliente {}", idCliente, e);
+        }
+        return null;
+    }
+
+    @Override
     public boolean existeDni(String dni, int idExcluir) {
         String sql = "SELECT COUNT(*) FROM clientes WHERE dni = ? AND id_cliente <> ?";
         try (Connection cn = Conexion.getConexion();

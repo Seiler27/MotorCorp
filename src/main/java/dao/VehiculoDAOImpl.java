@@ -43,6 +43,26 @@ public class VehiculoDAOImpl implements VehiculoDAO {
     }
 
     @Override
+    public Vehiculo buscarPorPlaca(String placa) {
+        String sql = "SELECT id_vehiculo, placa, marca, modelo, id_cliente FROM vehiculos WHERE placa = ?";
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, placa);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Vehiculo v = new Vehiculo(rs.getString("placa"), rs.getString("marca"),
+                            rs.getString("modelo"), rs.getInt("id_cliente"));
+                    v.setIdVehiculo(rs.getInt("id_vehiculo"));
+                    return v;
+                }
+            }
+        } catch (SQLException e) {
+            LOG.error("Error al buscar la placa {}", placa, e);
+        }
+        return null;
+    }
+
+    @Override
     public boolean existePlaca(String placa, int idExcluir) {
         String sql = "SELECT COUNT(*) FROM vehiculos WHERE placa = ? AND id_vehiculo <> ?";
         try (Connection cn = Conexion.getConexion();

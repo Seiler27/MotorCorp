@@ -12,6 +12,9 @@ public interface ClienteDAO {
     /** Busca clientes por DNI, nombres o apellidos. Si el texto está vacío, lista todos. */
     List<Cliente> buscar(String texto);
 
+    /** Busca un cliente por su id. Devuelve null si no existe. */
+    Cliente buscarPorId(int idCliente);
+
     /** Indica si ya existe otro cliente con ese DNI (se ignora el cliente con idExcluir). */
     boolean existeDni(String dni, int idExcluir);
 
