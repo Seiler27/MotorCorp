@@ -5,6 +5,7 @@ import dao.ComprobanteDAOImpl;
 import dao.DashboardDAOImpl;
 import dao.OrdenServicioDAOImpl;
 import dao.ProductoDAOImpl;
+import dao.ReporteDAOImpl;
 import dao.UsuarioDAOImpl;
 import dao.VehiculoDAOImpl;
 import java.util.EnumMap;
@@ -23,6 +24,7 @@ import vista.PnlCola;
 import vista.PnlHistorial;
 import vista.PnlInventario;
 import vista.PnlPos;
+import vista.PnlReportes;
 import vista.PnlEnConstruccion;
 import vista.PnlInicio;
 
@@ -86,6 +88,11 @@ public class ControladorPrincipal {
         ControladorPos controladorPos = new ControladorPos(pnlPos, new OrdenServicioDAOImpl(), new ProductoDAOImpl(),
                 new ComprobanteDAOImpl(), usuario);
         alAbrir.put(Modulo.POS, controladorPos::cargar);
+
+        PnlReportes pnlReportes = new PnlReportes();
+        vista.agregarModulo(pnlReportes, Modulo.REPORTES.name());
+        ControladorReportes controladorReportes = new ControladorReportes(pnlReportes, new ReporteDAOImpl(), usuario);
+        alAbrir.put(Modulo.REPORTES, controladorReportes::cargar);
 
         for (Modulo modulo : Modulo.values()) {
             if (!alAbrir.containsKey(modulo)) {
