@@ -13,4 +13,19 @@ public interface ProductoDAO {
 
     /** Busca un producto por su id (para conocer su stock actual). */
     Producto buscarPorId(int idProducto);
+
+    /** Indica si ya existe otro producto con el mismo nombre (se ignora idExcluir). */
+    boolean existeNombre(String nombre, int idExcluir);
+
+    /** Registra un producto nuevo. */
+    boolean registrar(Producto producto);
+
+    /** Actualiza categoría, nombre, stock y precio. */
+    boolean actualizar(Producto producto);
+
+    /** Suma unidades al stock (ingreso de mercadería). */
+    boolean reponerStock(int idProducto, int cantidad);
+
+    /** Elimina un producto (falla si ya se usó en alguna orden, para conservar el historial). */
+    boolean eliminar(int idProducto);
 }

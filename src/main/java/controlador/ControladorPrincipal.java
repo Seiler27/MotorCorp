@@ -1,6 +1,7 @@
 package controlador;
 
 import dao.ClienteDAOImpl;
+import dao.ComprobanteDAOImpl;
 import dao.DashboardDAOImpl;
 import dao.OrdenServicioDAOImpl;
 import dao.ProductoDAOImpl;
@@ -20,6 +21,8 @@ import vista.FrmPrincipal;
 import vista.PnlClientes;
 import vista.PnlCola;
 import vista.PnlHistorial;
+import vista.PnlInventario;
+import vista.PnlPos;
 import vista.PnlEnConstruccion;
 import vista.PnlInicio;
 
@@ -72,6 +75,17 @@ public class ControladorPrincipal {
         ControladorHistorial controladorHistorial = new ControladorHistorial(pnlHistorial, new OrdenServicioDAOImpl(),
                 new ProductoDAOImpl(), new UsuarioDAOImpl(), new VehiculoDAOImpl(), usuario);
         alAbrir.put(Modulo.HISTORIAL, controladorHistorial::cargar);
+
+        PnlInventario pnlInventario = new PnlInventario();
+        vista.agregarModulo(pnlInventario, Modulo.INVENTARIO.name());
+        ControladorInventario controladorInventario = new ControladorInventario(pnlInventario, new ProductoDAOImpl(), usuario);
+        alAbrir.put(Modulo.INVENTARIO, controladorInventario::cargar);
+
+        PnlPos pnlPos = new PnlPos();
+        vista.agregarModulo(pnlPos, Modulo.POS.name());
+        ControladorPos controladorPos = new ControladorPos(pnlPos, new OrdenServicioDAOImpl(), new ProductoDAOImpl(),
+                new ComprobanteDAOImpl(), usuario);
+        alAbrir.put(Modulo.POS, controladorPos::cargar);
 
         for (Modulo modulo : Modulo.values()) {
             if (!alAbrir.containsKey(modulo)) {

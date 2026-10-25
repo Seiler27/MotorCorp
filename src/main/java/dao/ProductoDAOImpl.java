@@ -53,6 +53,68 @@ public class ProductoDAOImpl implements ProductoDAO {
         }
     }
 
+    @Override
+    public boolean existeNombre(String nombre, int idExcluir) {
+        String sql = "SELECT COUNT(*) FROM productos WHERE LOWER(nombre) = LOWER(?) AND id_producto <> ?";
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            ps.setInt(2, idExcluir);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            LOG.error("Error al verificar el producto {}", nombre, e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean registrar(Producto p) {
+        return ejecutar("INSERT INTO productos (categoria, nombre, stock_actual, precio_unitario) VALUES (?, ?, ?, ?)",
+                "Producto registrado: " + p.getNombre() + " (stock " + p.getStockActual() + ")",
+                p.getCategoria(), p.getNombre(), p.getStockActual(), p.getPrecioUnitario());
+    }
+
+    @Override
+    public boolean actualizar(Producto p) {
+        return ejecutar("UPDATE productos SET categoria = ?, nombre = ?, stock_actual = ?, precio_unitario = ? WHERE id_producto = ?",
+                "Producto actualizado: " + p.getNombre() + " (stock " + p.getStockActual() + ", precio " + p.getPrecioUnitario() + ")",
+                p.getCategoria(), p.getNombre(), p.getStockActual(), p.getPrecioUnitario(), p.getIdProducto());
+    }
+
+    @Override
+    public boolean reponerStock(int idProducto, int cantidad) {
+        return ejecutar("UPDATE productos SET stock_actual = stock_actual + ? WHERE id_producto = ?",
+                "Reposición de stock: producto " + idProducto + " +" + cantidad, cantidad, idProducto);
+    }
+
+    @Override
+    public boolean eliminar(int idProducto) {
+        return ejecutar("DELETE FROM productos WHERE id_producto = ?", "Producto eliminado: " + idProducto, idProducto);
+    }
+
+    /**
+     * Ejecuta un INSERT, UPDATE o DELETE con sus parámetros y deja constancia en la bitácora
+     * (auditoría del inventario, RNF01).
+     */
+    private boolean ejecutar(String sql, String mensajeBitacora, Object... parametros) {
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            for (int i = 0; i < parametros.length; i++) {
+                ps.setObject(i + 1, parametros[i]);
+            }
+            boolean ok = ps.executeUpdate() > 0;
+            if (ok) {
+                LOG.info("[INVENTARIO] {}", mensajeBitacora);
+            }
+            return ok;
+        } catch (SQLException e) {
+            LOG.warn("[INVENTARIO] Operación no realizada: {} ({})", mensajeBitacora, e.getMessage());
+            return false;
+        }
+    }
+
     /** Convierte una fila de la consulta en un objeto Producto. */
     protected Producto mapear(ResultSet rs) throws SQLException {
         Producto p = new Producto(rs.getString("categoria"), rs.getString("nombre"),

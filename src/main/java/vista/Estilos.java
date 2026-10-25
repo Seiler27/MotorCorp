@@ -111,4 +111,22 @@ public final class Estilos {
             }
         });
     }
+
+    /** Muestra la columna de stock en rojo (stock bajo) o verde (disponible). */
+    public static void columnaStock(JTable tabla, int columna, int limiteStockBajo) {
+        tabla.getColumnModel().getColumn(columna).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public java.awt.Component getTableCellRendererComponent(JTable t, Object valor, boolean seleccionado,
+                    boolean foco, int fila, int col) {
+                super.getTableCellRendererComponent(t, valor, seleccionado, foco, fila, col);
+                int stock = valor instanceof Integer n ? n : 0;
+                setText("● " + stock);
+                setFont(getFont().deriveFont(Font.BOLD));
+                if (!seleccionado) {
+                    setForeground(stock <= limiteStockBajo ? ROJO : VERDE);
+                }
+                return this;
+            }
+        });
+    }
 }
