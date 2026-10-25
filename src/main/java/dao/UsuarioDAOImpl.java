@@ -85,6 +85,22 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         }
     }
 
+    @Override
+    public boolean esCodigoSecretoValido(String codigo) {
+        String sql = "SELECT COUNT(*) FROM usuarios u JOIN roles r ON u.id_rol = r.id_rol "
+                + "WHERE r.nombre_rol = 'Administrador' AND u.codigo_secreto = ?";
+        try (Connection cn = Conexion.getConexion();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, codigo);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            LOG.error("Error al validar el código secreto", e);
+            return false;
+        }
+    }
+
     /** Convierte una fila de la consulta en un objeto Usuario. */
     private Usuario mapear(ResultSet rs) throws SQLException {
         Usuario u = new Usuario();

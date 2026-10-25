@@ -18,4 +18,7 @@ public interface UsuarioDAO {
     List<Usuario> listarPorRol(String nombreRol);
     
     boolean registrar(Usuario usuario);
+
+    /** Indica si el código secreto pertenece a algún administrador del taller. */
+    boolean esCodigoSecretoValido(String codigo);
 }
