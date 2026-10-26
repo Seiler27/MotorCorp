@@ -25,7 +25,6 @@ import vista.PnlHistorial;
 import vista.PnlInventario;
 import vista.PnlPos;
 import vista.PnlReportes;
-import vista.PnlEnConstruccion;
 import vista.PnlInicio;
 
 /**
@@ -93,12 +92,6 @@ public class ControladorPrincipal {
         vista.agregarModulo(pnlReportes, Modulo.REPORTES.name());
         ControladorReportes controladorReportes = new ControladorReportes(pnlReportes, new ReporteDAOImpl(), usuario);
         alAbrir.put(Modulo.REPORTES, controladorReportes::cargar);
-
-        for (Modulo modulo : Modulo.values()) {
-            if (!alAbrir.containsKey(modulo)) {
-                vista.agregarModulo(new PnlEnConstruccion(botones.get(modulo).getText()), modulo.name());
-            }
-        }
 
         // Permisos por rol y eventos de los botones
         botones.forEach((modulo, boton) -> {

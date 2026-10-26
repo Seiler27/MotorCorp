@@ -1,4 +1,8 @@
 # Copie este archivo como db.properties y complete sus datos de PostgreSQL
-db.url=jdbc:postgresql://localhost:5432/motorcorp_db
+db.url=jdbc:postgresql://localhost:5432/motorcorp_db 
+o
+db.url=jdbc:postgresql://localhost:5433/motorcorp_db 
+dependiendo el puerto que usas
+
 db.usuario=postgres
 db.password=SU_CONTRASEÑA

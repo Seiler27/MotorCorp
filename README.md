@@ -68,10 +68,10 @@ database/motorcorp_db.sql  script de la base de datos
 
 | Usuario | Contraseña | Rol |
 |---|---|---|
-| admin | Admin123 | Administrador |
-| recepcion | Recep123 | Recepción |
-| mecanico1 | Meca123 | Mecánico |
-| mecanico2 | Meca123 | Mecánico |
+| admin     | Admin123 | Administrador |
+| recepcion | Recep123 | Recepción     |
+| mecanico1 | Meca123  | Mecánico      |
+| mecanico2 | Meca123  | Mecánico      |
 
 ## Pruebas
 
